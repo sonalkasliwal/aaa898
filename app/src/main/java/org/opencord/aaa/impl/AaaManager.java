@@ -141,7 +141,7 @@ public class AaaManager
 
     protected AuthenticationStatisticsEventPublisher authenticationStatisticsPublisher;
     protected BaseInformationService<SubscriberAndDeviceInformation> subsService;
-    private final DeviceListener deviceListener = new InternalDeviceListener();
+    protected final DeviceListener deviceListener = new InternalDeviceListener();
 
     private static final int DEFAULT_REPEAT_DELAY = 20;
     @Property(name = "statisticsGenerationPeriodInSeconds", intValue = DEFAULT_REPEAT_DELAY,
@@ -575,7 +575,8 @@ public class AaaManager
                 //pushing machine stats to kafka
                 AaaSupplicantMachineStats machineObj = aaaSupplicantStatsManager.getSupplicantStats(machineStats);
                 aaaSupplicantStatsManager.getMachineStatsDelegate()
-                        .notify(new AaaMachineStatisticsEvent(AaaMachineStatisticsEvent.Type.STATS_UPDATE, machineObj));
+                        .notify(new AaaMachineStatisticsEvent(
+                                AaaMachineStatisticsEvent.Type.STATS_UPDATE, machineObj));
                 break;
             default:
                 log.warn("Unknown RADIUS message received with code: {}", radiusPacket.getCode());
@@ -753,7 +754,8 @@ public class AaaManager
                     }
                     AaaSupplicantMachineStats obj = aaaSupplicantStatsManager.getSupplicantStats(stateMachine);
                     aaaSupplicantStatsManager.getMachineStatsDelegate()
-                            .notify(new AaaMachineStatisticsEvent(AaaMachineStatisticsEvent.Type.STATS_UPDATE, obj));
+                            .notify(new AaaMachineStatisticsEvent(
+                                    AaaMachineStatisticsEvent.Type.STATS_UPDATE, obj));
                     if (stateMachine.state() == StateMachine.STATE_AUTHORIZED) {
                         stateMachine.logoff();
                         aaaStatisticsManager.getAaaStats().incrementEapolLogoffRx();
@@ -968,7 +970,8 @@ public class AaaManager
                     //pushing captured machine stats to kafka
                     AaaSupplicantMachineStats obj = aaaSupplicantStatsManager.getSupplicantStats(stateMachine);
                     aaaSupplicantStatsManager.getMachineStatsDelegate()
-                            .notify(new AaaMachineStatisticsEvent(AaaMachineStatisticsEvent.Type.STATS_UPDATE, obj));
+                            .notify(new AaaMachineStatisticsEvent(
+                                    AaaMachineStatisticsEvent.Type.STATS_UPDATE, obj));
 
                     Map<String, StateMachine> sessionIdMap = StateMachine.sessionIdMap();
                     StateMachine removed = sessionIdMap.remove(sessionId);
